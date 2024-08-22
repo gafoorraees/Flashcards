@@ -1,37 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Flashcards.Tables;
 using Flashcards.Models;
+using System.Diagnostics.Eventing.Reader;
+
 
 namespace Flashcards
 {
     internal class UserInput
     {
-        public void CreateStack()
+        public static void CreateStack()
         {
-            string stackName = GetStackName("Enter the stack name: ");
+            var stackList = Stacks.GetAllStacks();
+            string stackName;
+
+            while (true)
+            {
+                stackName = GetStackName("Enter the stack name: ");
+
+                if (stackList.Any(stack => stack.Name.Equals(stackName, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Console.WriteLine("You have already created a stack with that name. Please choose a different name.");
+                }
+                else
+                {
+                    break;
+                }
+            }
 
             Stack stack = new Stack()
             {
                 Name = stackName
             };
-            
+
+            Stacks.InsertStack(stackName);
         }
 
-        public void CreateFlashcard()
+        public static void CreateFlashcard()
         {
+            UI.DisplayStacks();
+
+            Console.WriteLine("Please type in the name of the stack that you want to add a flashcard to:");
+            string stackAdd = Console.ReadLine().Trim();
+            int stackId = Stacks.ReturnStackID(stackAdd);
+
             string question = GetQuestion("Enter the question: ");
             string answer = GetAnswer("Enter the answer: ");
-            // which stack should this card go to? list stacks with displayid. insert into that stack
 
             Flashcard flashcard = new Flashcard()
             {
                 Question = question,
-                Answer = answer
+                Answer = answer,
+                StackID = stackId
+                
             };
+
+            FlashcardsTable.InsertFlashcard(question, answer, stackId);
 
         }
         internal static string GetStackName(string prompt)

@@ -19,7 +19,7 @@ namespace Flashcards.Tables
             }
         }
 
-        public static IEnumerable<Stack> GetAllStacks()
+        public static List<Stack> GetAllStacks()
         {
             using (var connection = new SqlConnection(connectionString))
             {
@@ -28,9 +28,25 @@ namespace Flashcards.Tables
             }
         }
 
-        public static void DeleteStack(string name)
+        public static int ReturnStackID(string stackName)
         {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string selectQuery = "SELECT StackID FROM Stacks WHERE Name = @Name";
+                var parameters = new { Name = stackName };
+                int stackId = connection.QuerySingle<int>(selectQuery, parameters);
 
+                return stackId;
+            }
+        }
+        public static void DeleteStack(string stackName)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string query = "DELETE FROM Stacks WHERE Name = @Name";
+                var parameters = new { Name = stackName };
+                connection.Execute(query, parameters);
+            }
         }
     }
 }
