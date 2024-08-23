@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Flashcards.Tables;
 
 namespace Flashcards
 {
@@ -15,8 +16,8 @@ namespace Flashcards
             while (closeApp == false)
             {
                 Console.WriteLine("Choose");
-                Console.WriteLine("Type 1 to Create a stack");
-                Console.WriteLine("Type 2 to Create a flashcard");
+                Console.WriteLine("Type 1 to Manage Stacks");
+                Console.WriteLine("Type 2 to Manage Flashcards");
                 Console.WriteLine("Type 3 to view all stacks");
                 Console.WriteLine("Type 4 to close the application");
 
@@ -25,7 +26,7 @@ namespace Flashcards
                 switch (command)
                 {
                     case "1":
-                        UserInput.CreateStack();
+                        UI.ManageStacks();
                         break;
                     case "2":
                         UserInput.CreateFlashcard();
@@ -34,6 +35,9 @@ namespace Flashcards
                         UI.DisplayStacks();
                         break;
                     case "4":
+                        Stacks.DeleteStack();
+                        break;
+                    case "5":
                         closeApp = true;
                         Environment.Exit(0);
                         break;

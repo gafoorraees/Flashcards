@@ -39,12 +39,17 @@ namespace Flashcards.Tables
                 return stackId;
             }
         }
-        public static void DeleteStack(string stackName)
+        public static void DeleteStack()
         {
+            UI.DisplayStacks();
+
+            Console.WriteLine("Please enter the name of the stack that you would like to delete. Warning: All flashcards linked to the stack will be deleted.");
+            string stackDelete = Console.ReadLine().Trim();
+
             using (var connection = new SqlConnection(connectionString))
             {
                 string query = "DELETE FROM Stacks WHERE Name = @Name";
-                var parameters = new { Name = stackName };
+                var parameters = new { Name = stackDelete };
                 connection.Execute(query, parameters);
             }
         }
