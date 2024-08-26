@@ -39,6 +39,18 @@ namespace Flashcards.Tables
                 return stackId;
             }
         }
+
+        public static string ReturnStackName(int stackId)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string selectQuery = "SELECT Name FROM Stacks WHERE ID = @StackId";
+                var parameters = new { StackId = stackId };
+                string stackName = connection.QuerySingle<string>(selectQuery, parameters);
+
+                return stackName;
+            }
+        }
         public static void DeleteStack()
         {
             UI.DisplayStacks();

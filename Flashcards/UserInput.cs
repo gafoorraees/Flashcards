@@ -47,8 +47,8 @@ namespace Flashcards
             string stackAdd = Console.ReadLine().Trim();
             int stackId = Stacks.ReturnStackID(stackAdd);
 
-            string question = GetQuestion("Enter the question: ");
-            string answer = GetAnswer("Enter the answer: ");
+            string question = GetQuestion("Enter the question: ", false);
+            string answer = GetAnswer("Enter the answer: ", false);
 
             Flashcard flashcard = new Flashcard()
             {
@@ -62,14 +62,21 @@ namespace Flashcards
 
         }
 
-        public static void UpdateFlashcard(int stackID)
+        public static void CreateFlashcard(int stackId)
         {
-            UI.DisplayFlashcards();
+            string question = GetQuestion("Enter the question: ", false);
+            string answer = GetAnswer("Enter the answer: ", false);
 
-            Console.WriteLine("Please type in the name of the flashcard that you want to edit:");
-            string 
+            Flashcard flaschard = new Flashcard()
+            {
+                Question = question,
+                Answer = answer,
+                StackID = stackId
+            };
+
+            FlashcardsTable.InsertFlashcard(question, answer, stackId);
         }
-
+        
         internal static string GetStackName(string prompt)
         {
             Console.WriteLine(prompt);
@@ -78,20 +85,36 @@ namespace Flashcards
             return stack;
         }
 
-        internal static string GetQuestion(string prompt)
+        public static string GetQuestion(string prompt, bool isUpdate, string currentQuestion = "")
         {
-            Console.WriteLine(prompt);
-            string question = Validation.ValidString(Console.ReadLine());
+            Console.WriteLine(isUpdate ?
+                $"{prompt} (current: {currentQuestion}, press Enter to keep current):" :
+                prompt);
 
-            return question;
+            string question = Console.ReadLine();
+            
+            if (!isUpdate)
+            {
+                Validation.ValidString(question);
+            }
+
+            return string.IsNullOrEmpty(question) ? currentQuestion : question;
         }
 
-        internal static string GetAnswer(string prompt)
+        public static string GetAnswer(string prompt, bool isUpdate, string currentAnswer = "")
         {
-            Console.WriteLine(prompt);
-            string answer = Validation.ValidString(Console.ReadLine());
+            Console.WriteLine(isUpdate ?
+                $"{prompt} (current: {currentAnswer}, press Enter to keep current):" :
+                prompt);
 
-            return answer;
+            string answer = Console.ReadLine();
+
+            if (!isUpdate)
+            {
+                Validation.ValidString(answer);
+            }
+
+            return string.IsNullOrEmpty(answer) ? currentAnswer : answer;
         }
     }
 }

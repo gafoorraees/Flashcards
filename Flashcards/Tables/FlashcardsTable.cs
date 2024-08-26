@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Dapper;
 using Flashcards.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Flashcards.Tables
 {
@@ -44,5 +45,54 @@ namespace Flashcards.Tables
                 return connection.Query<Flashcard>(selectQuery, parameters).ToList();
             }
         }
+
+        public static void UpdateFlashCard()
+        {
+            while (true)
+            { 
+                UI.DisplayFlashcards();
+
+                Console.WriteLine("Please type in the ID of the flashcard that you want to edit:");
+                var flashcardID = Console.ReadLine();
+
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    var flashcard = connection.QuerySingleOrDefault<Flashcard>(
+                        "SELECT * FROM Flashcards WHERE DisplayID = @FlashcardID", new
+                        {
+                            FlashcardID = flashcardID
+                        });
+
+                    if (flashcard == null)
+                    {
+                        Console.WriteLine("Flashcard not found. Please try again.");
+                        continue;
+                    }
+
+                    string question = UserInput.GetQuestion("Please enter the updated question", true, flashcard.Question);
+
+                    string answer = UserInput.GetAnswer("Please enter the updated answer", true, flashcard.Answer);
+
+                    string updateSql = @"
+                        UPDATE Flashcards
+                        SET Question = @Question, Answer = @Answer
+                        WHERE DisplayID = @FlashcardID";
+
+                    connection.Execute(updateSql, new
+                    {
+                        Question = question,
+                        Answer = answer,
+                        FlashcardID = flashcardID
+                    });
+                }
+            }
+        }
+
+        public static void UpdateFlashcard(int stackID)
+        {
+
+        }
+
+
     }
 }
