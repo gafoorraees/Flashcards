@@ -34,6 +34,11 @@ namespace Flashcards
             Stacks.InsertStack(stackName);
         }
 
+        public static void UpdateStack()
+        {
+
+        }
+
         public static void CreateFlashcard()
         {
             UI.DisplayStacks();
@@ -56,6 +61,15 @@ namespace Flashcards
             FlashcardsTable.InsertFlashcard(question, answer, stackId);
 
         }
+
+        public static void UpdateFlashcard(int stackID)
+        {
+            UI.DisplayFlashcards();
+
+            Console.WriteLine("Please type in the name of the flashcard that you want to edit:");
+            string 
+        }
+
         internal static string GetStackName(string prompt)
         {
             Console.WriteLine(prompt);

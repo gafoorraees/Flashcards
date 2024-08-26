@@ -63,6 +63,29 @@ namespace Flashcards
                 }
             }
         }
+        public static void DisplayFlashcards()
+        {
+            Console.WriteLine("Enter the stack name for which you would like to see flashcards:");
+            DisplayStacks();
+
+            var stackName = Console.ReadLine().Trim();
+            var stackID = Stacks.ReturnStackID(stackName);
+            
+            var flashcards = FlashcardsTable.GetFlashcardsFromStack(stackID);
+
+            if (flashcards.Count == 0)
+            {
+                Console.WriteLine("No available flascards in this stack. Please add flashcards first.");
+                return;
+            }
+
+            Console.WriteLine($"Flashcards available in the stack '{stackName}':");
+
+            foreach (var flashcard in flashcards)
+            {
+                Console.WriteLine($"ID: {flashcard.DisplayID}. Question: {flashcard.Question}. Answer: {flashcard.Answer}");
+            }  
+        }
 
         public static void ManageFlashcards()
         {

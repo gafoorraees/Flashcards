@@ -30,5 +30,19 @@ namespace Flashcards.Tables
                 connection.Execute(insertQuery, flashcardParameters);
             }
         }
+        public static List<Flashcard> GetFlashcardsFromStack(int stackId)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string selectQuery = @"
+                    SELECT DisplayID, Question, Answer
+                    FROM Flashcards
+                    WHERE StackID = @StackID";
+
+                var parameters = new { StackID = stackId };
+
+                return connection.Query<Flashcard>(selectQuery, parameters).ToList();
+            }
+        }
     }
 }
