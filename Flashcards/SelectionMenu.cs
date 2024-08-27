@@ -19,7 +19,8 @@ namespace Flashcards
                 Console.WriteLine("Type 1 to Manage Stacks");
                 Console.WriteLine("Type 2 to Manage Flashcards");
                 Console.WriteLine("Type 3 to Start a Study Session");
-                Console.WriteLine("Type 4 to close the application");
+                Console.WriteLine("Type 4 to See Previous Study Sessions");
+                Console.WriteLine("Type 5 to close the application");
 
                 string command = Console.ReadLine();
 
@@ -35,7 +36,7 @@ namespace Flashcards
                         StudySession.StartStudySession();
                         break;
                     case "4":
-                        Stacks.DeleteStack();
+                        StudySession.DisplayStudySessions();
                         break;
                     case "5":
                         closeApp = true;

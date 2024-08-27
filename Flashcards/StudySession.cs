@@ -1,11 +1,4 @@
-﻿using Dapper;
-using Flashcards.Models;
-using Flashcards.Tables;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Flashcards.Models;
 using Flashcards.Tables;
 
 namespace Flashcards
@@ -73,6 +66,18 @@ namespace Flashcards
                 Question = flashcard.Question,
                 Answer = flashcard.Answer
             };
+        }
+
+        public static void DisplayStudySessions()
+        {
+            var studySessions = StudySessions.GetStudySessions();
+
+            Console.WriteLine("Study Sessions:\n");
+
+            foreach (var session in studySessions)
+            {
+                Console.WriteLine($"Stack: {session.StackName}, Date: {session.Date}, Score: {session.Score}");
+            }
         }
     }
 }

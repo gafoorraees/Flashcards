@@ -16,5 +16,17 @@ namespace Flashcards.Tables
                 connection.Execute(insertQuery, new { session.StackID, session.Date, session.Score });
             }
         }
+
+        public static IEnumerable<StudySessionDTO> GetStudySessions()
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string query = @"
+                    SELECT ss.ID, ss.StackID, s.Name AS StackName, ss.Date, ss.Score
+                    FROM StudySessions ss
+                    JOIN Stacks s ON ss.StackID = s.ID";
+                return connection.Query<StudySessionDTO>(query).ToList();
+            }
+        }
      }
 }
