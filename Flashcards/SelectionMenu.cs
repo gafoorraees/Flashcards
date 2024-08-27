@@ -18,7 +18,7 @@ namespace Flashcards
                 Console.WriteLine("Choose");
                 Console.WriteLine("Type 1 to Manage Stacks");
                 Console.WriteLine("Type 2 to Manage Flashcards");
-                Console.WriteLine("Type 3 to view all stacks");
+                Console.WriteLine("Type 3 to Start a Study Session");
                 Console.WriteLine("Type 4 to close the application");
 
                 string command = Console.ReadLine();
@@ -29,10 +29,10 @@ namespace Flashcards
                         UI.ManageStacks();
                         break;
                     case "2":
-                        UserInput.CreateFlashcard();
+                        UI.ManageFlashcards();
                         break;
                     case "3":
-                        UI.DisplayStacks();
+                        StudySession.StartStudySession();
                         break;
                     case "4":
                         Stacks.DeleteStack();

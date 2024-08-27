@@ -16,14 +16,14 @@ namespace Flashcards.Tables
             {
                 string getMaxDisplayIdQuery = "SELECT ISNULL(MAX(DisplayID), 0) + 1 FROM Flashcards WHERE StackID = @StackID";
                 var displayId = connection.QuerySingle<int>(getMaxDisplayIdQuery, new { StackID = stackId });
-             
-                string insertQuery = @"INSERT INTO Flashcards (Question, Answer, StackID)
-                                       VALUES (@Question, @Answer, @StackID)";
-                
-                var flashcardParameters = new 
-                { 
-                    Question = question, 
-                    Answer = answer, 
+
+                string insertQuery = @"INSERT INTO Flashcards (Question, Answer, StackID, DisplayID)
+                                       VALUES (@Question, @Answer, @StackID, @DisplayID)";
+
+                var flashcardParameters = new
+                {
+                    Question = question,
+                    Answer = answer,
                     StackID = stackId,
                     DisplayID = displayId
                 };
@@ -46,21 +46,16 @@ namespace Flashcards.Tables
             }
         }
 
-        public static void UpdateFlashCard()
+        public static void UpdateFlashcard(int stackID)
         {
             while (true)
-            { 
-                UI.DisplayFlashcards();
-
-                Console.WriteLine("Please type in the ID of the flashcard that you want to edit:");
-                var flashcardID = Console.ReadLine();
-
+            {
                 using (var connection = new SqlConnection(connectionString))
                 {
                     var flashcard = connection.QuerySingleOrDefault<Flashcard>(
                         "SELECT * FROM Flashcards WHERE DisplayID = @FlashcardID", new
                         {
-                            FlashcardID = flashcardID
+                            FlashcardID = stackID
                         });
 
                     if (flashcard == null)
@@ -74,25 +69,58 @@ namespace Flashcards.Tables
                     string answer = UserInput.GetAnswer("Please enter the updated answer", true, flashcard.Answer);
 
                     string updateSql = @"
-                        UPDATE Flashcards
-                        SET Question = @Question, Answer = @Answer
-                        WHERE DisplayID = @FlashcardID";
+                            UPDATE Flashcards
+                            SET Question = @Question, Answer = @Answer
+                            WHERE DisplayID = @FlashcardID";
 
                     connection.Execute(updateSql, new
                     {
                         Question = question,
                         Answer = answer,
-                        FlashcardID = flashcardID
+                        FlashcardID = stackID
                     });
+
+                    Console.WriteLine("Flashcard updated successfully.");
+                    break;
                 }
             }
         }
 
-        public static void UpdateFlashcard(int stackID)
+        public static void DeleteFlashcard(int stackId)
         {
+            Console.WriteLine("\n");
+            Console.WriteLine("Please enter the ID of the flashcard that you want to remove: ");
+            var input = Console.ReadLine().Trim();
 
+            if (int.TryParse(input, out int flashcardID))
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    string deleteQuery = "DELETE FROM Flashcards WHERE DisplayID = @DisplayID";
+                    var parameters = new { DisplayID = flashcardID };
+                    connection.Execute(deleteQuery, parameters);
+
+                    string reorderQuery = @"
+                        WITH OrderedFlashcards AS (
+                            SELECT ID, ROW_NUMBER() OVER (ORDER BY ID) AS NewDisplayID
+                            FROM Flashcards
+                            WHERE StackID = @StackID
+                        )
+                        UPDATE Flashcards
+                        SET DisplayID = OrderedFlashcards.NewDisplayID
+                        FROM Flashcards
+                        JOIN OrderedFlashcards ON Flashcards.ID = OrderedFlashcards.ID";
+
+                    connection.Execute(reorderQuery, new { StackID = stackId });
+                }
+
+                Console.WriteLine("Flashcard deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid ID. Please enter a valid integer.");
+            }
         }
-
-
     }
 }
+

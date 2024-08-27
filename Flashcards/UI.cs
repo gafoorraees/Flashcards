@@ -12,12 +12,14 @@ namespace Flashcards
     {
         public static void DisplayStacks()
         {
+            var menu = new SelectionMenu();
             var stacks = Stacks.GetAllStacks();
 
             if (stacks.Count == 0)
             {
-                Console.WriteLine("No available stacks. Please create a stack first.");
-                return;
+                Console.WriteLine("No available stacks. Please create a stack first. Press Enter to return the main menu.\n");
+                Console.ReadLine();
+                menu.Menu();
             }
 
             Console.WriteLine("Available stacks:");
@@ -29,48 +31,83 @@ namespace Flashcards
             }
         }
 
-
         public static void IndividualStacks()
         {
             var menu = new SelectionMenu();
-            
+
             DisplayStacks();
-           
-            Console.WriteLine("Please type in the name of the stack that you would like to view");
+
+            Console.WriteLine("Please type in the name of the stack that you would like to view\n");
+
             var stackName = Console.ReadLine().Trim();
             var stackId = Stacks.ReturnStackID(stackName);
 
+            if (stackId == 0)
+            {
+                Console.WriteLine("Stack not found. Please try again.\n");
+                IndividualStacks();
+                return;
+            }
+
             DisplayFlashcards(stackId);
 
-            Console.WriteLine("Would you like to modify the cards in this stack?");
-            Console.WriteLine("1. Add flashcard to stack.");
-            Console.WriteLine("2. Update flashcard in stack.");
-            Console.WriteLine("3. Delete flashcard in stack.");
-            Console.WriteLine("4. Change to another stack.");
-            Console.WriteLine("5. Return to Main Menu.");
+            while (true)
+            { 
+                Console.WriteLine("Would you like to modify the cards in this stack?\n");
+                Console.WriteLine("1. Add flashcard to stack.");
+                Console.WriteLine("2. Update flashcard in stack.");
+                Console.WriteLine("3. Delete flashcard in stack.");
+                Console.WriteLine("4. Change to another stack.");
+                Console.WriteLine("5. Return to Main Menu.");
 
-            string input = Console.ReadLine();
+                string input = Console.ReadLine().Trim();
 
-            if (int.TryParse(input, out int choice))
-            {
-                switch (choice)
+                if (string.IsNullOrEmpty(input))
                 {
-                    case 1:
-                        UserInput.CreateFlashcard(stackId);
-                        break;
+                    Console.WriteLine("Invalid input. Please enter a valid option.\n");
+                    continue;
                 }
-            }
+
+                if (int.TryParse(input, out int choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            UserInput.CreateFlashcard(stackId);
+                            break;
+                        case 2:
+                            FlashcardsTable.UpdateFlashcard(stackId);
+                            break;
+                        case 3:
+                            FlashcardsTable.DeleteFlashcard(stackId);
+                            break;
+                        case 4:
+                            IndividualStacks();
+                            return;
+                        case 5:
+                            menu.Menu();
+                            return;
+                        default:
+                            Console.WriteLine("Invalid choice. Please try agian.\n");
+                            continue;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please enter a valid number.\n");
+                }
+           }
         }
 
         public static void ManageStacks()
         {
             var menu = new SelectionMenu();
 
-            Console.WriteLine("Manage Stacks:");
+            Console.WriteLine("Manage Stacks:\n");
             Console.WriteLine("1. Create Stack");
             Console.WriteLine("2. Delete Stack");
             Console.WriteLine("3. View Individual Stacks");
-            Console.WriteLine("4. Go Back");
+            Console.WriteLine("4. Return to Main Menu");
 
             string input = Console.ReadLine();
 
@@ -91,7 +128,7 @@ namespace Flashcards
                         menu.Menu();
                         break;
                     default:
-                        Console.WriteLine("Invalid choice. Please try again.");
+                        Console.WriteLine("Invalid choice. Please try again.\n");
                         ManageStacks();
                         break;
                 }
@@ -99,7 +136,7 @@ namespace Flashcards
         }
         public static void DisplayFlashcards()
         {
-            Console.WriteLine("Enter the stack name for which you would like to see flashcards:");
+            Console.WriteLine("Enter the stack name for which you would like to see flashcards:\n");
             DisplayStacks();
 
             var stackName = Console.ReadLine().Trim();
@@ -109,15 +146,15 @@ namespace Flashcards
 
             if (flashcards.Count == 0)
             {
-                Console.WriteLine("No available flascards in this stack. Please add flashcards first.");
+                Console.WriteLine("No available flascards in this stack. Please add flashcards first.\n");
                 return;
             }
 
-            Console.WriteLine($"Flashcards available in the stack '{stackName}':");
+            Console.WriteLine($"Flashcards available in the stack '{stackName}':\n");
 
             foreach (var flashcard in flashcards)
             {
-                Console.WriteLine($"ID: {flashcard.DisplayID}. Question: {flashcard.Question}. Answer: {flashcard.Answer}");
+                Console.WriteLine($"ID: {flashcard.DisplayID}. Question: {flashcard.Question}. Answer: {flashcard.Answer}\n");
             }  
         }
 
@@ -132,19 +169,17 @@ namespace Flashcards
                 return;
             }
 
-            Console.WriteLine($"Flashcards available in the stack '{stackName}':");
+            Console.WriteLine($"Flashcards available in the stack '{stackName}':\n");
 
             foreach (var flashcard in flashcards)
             {
-                Console.WriteLine($"ID: {flashcard.DisplayID}. Question: {flashcard.Question}. Answer: {flashcard.Answer}");
+                Console.WriteLine($"ID: {flashcard.DisplayID}. Question: {flashcard.Question}. Answer: {flashcard.Answer}\n");
             }
         }
 
         public static void ManageFlashcards()
         {
-            var menu = new SelectionMenu();
-
-            
+            IndividualStacks();
         }
     }
 }

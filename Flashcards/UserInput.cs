@@ -34,34 +34,6 @@ namespace Flashcards
             Stacks.InsertStack(stackName);
         }
 
-        public static void UpdateStack()
-        {
-
-        }
-
-        public static void CreateFlashcard()
-        {
-            UI.DisplayStacks();
-
-            Console.WriteLine("Please type in the name of the stack that you want to add a flashcard to:");
-            string stackAdd = Console.ReadLine().Trim();
-            int stackId = Stacks.ReturnStackID(stackAdd);
-
-            string question = GetQuestion("Enter the question: ", false);
-            string answer = GetAnswer("Enter the answer: ", false);
-
-            Flashcard flashcard = new Flashcard()
-            {
-                Question = question,
-                Answer = answer,
-                StackID = stackId
-                
-            };
-
-            FlashcardsTable.InsertFlashcard(question, answer, stackId);
-
-        }
-
         public static void CreateFlashcard(int stackId)
         {
             string question = GetQuestion("Enter the question: ", false);

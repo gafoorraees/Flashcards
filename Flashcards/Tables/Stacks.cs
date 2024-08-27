@@ -32,9 +32,9 @@ namespace Flashcards.Tables
         {
             using (var connection = new SqlConnection(connectionString))
             {
-                string selectQuery = "SELECT StackID FROM Stacks WHERE Name = @Name";
+                string selectQuery = "SELECT ID FROM Stacks WHERE LOWER(Name) = LOWER(@Name)";
                 var parameters = new { Name = stackName };
-                int stackId = connection.QuerySingle<int>(selectQuery, parameters);
+                int stackId = connection.QuerySingleOrDefault<int>(selectQuery, parameters);
 
                 return stackId;
             }
@@ -53,16 +53,30 @@ namespace Flashcards.Tables
         }
         public static void DeleteStack()
         {
-            UI.DisplayStacks();
-
-            Console.WriteLine("Please enter the name of the stack that you would like to delete. Warning: All flashcards linked to the stack will be deleted.");
-            string stackDelete = Console.ReadLine().Trim();
-
-            using (var connection = new SqlConnection(connectionString))
+            while (true)
             {
-                string query = "DELETE FROM Stacks WHERE Name = @Name";
-                var parameters = new { Name = stackDelete };
-                connection.Execute(query, parameters);
+                UI.DisplayStacks();
+
+                Console.WriteLine("Please enter the name of the stack that you would like to delete. Warning: All flashcards linked to the stack will be deleted.");
+                string stackName = Console.ReadLine().Trim();
+
+                int stackId = ReturnStackID(stackName);
+
+                if (stackId == 0)
+                {
+                    Console.WriteLine("Stack does not exist. Please try again.");
+                    continue;
+                }
+
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    string deleteQuery = "DELETE FROM Stacks WHERE ID = @StackID";
+                    var parameters = new { StackID = stackId };
+                    connection.Execute(deleteQuery, parameters);
+                }
+
+                Console.WriteLine("Stack and its flashcards deleted successfully.");
+                break;
             }
         }
     }

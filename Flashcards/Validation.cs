@@ -10,6 +10,14 @@ namespace Flashcards
     {
         public static string ValidString(string input)
         {
+            int testNumeric;
+
+            while (string.IsNullOrEmpty(input) || int.TryParse(input, out testNumeric))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid input consisting of letters only.");
+                input = Console.ReadLine();
+            }
+
             return input;
         }
     }
