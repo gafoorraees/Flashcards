@@ -48,48 +48,60 @@ namespace Flashcards.Tables
 
         public static void UpdateFlashcard(int stackID)
         {
-            while (true)
+            Console.Clear();
+            var menu = new SelectionMenu();
+            var flashcards = FlashcardsTable.GetFlashcardsFromStack(stackID);
+
+            if (flashcards.Count == 0)
             {
-                using (var connection = new SqlConnection(connectionString))
+                Console.WriteLine("No flashcards available in this stack.");
+                return;
+            }
+
+            Console.WriteLine("Available Flashcards:\n");
+            foreach (var card in flashcards)
+            {
+                Console.WriteLine($"ID: {card.DisplayID}. Question: {card.Question}. Answer: {card.Answer}\n");
+            }
+
+            Console.WriteLine("Please enter the ID of the flashcard that you would like to update:\n");
+            
+            if (!int.TryParse(Console.ReadLine(), out int flashcardID))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid ID.");
+                return;
+            }
+
+            var selectedFlashcard = flashcards.SingleOrDefault(f => f.DisplayID == flashcardID);
+
+            string question = UserInput.GetQuestion("Please enter the updated question", true, selectedFlashcard.Question);
+            string answer = UserInput.GetAnswer("Please enter the updated answer", true, selectedFlashcard.Answer);
+
+            using (var connection = new SqlConnection(connectionString))
+            {
+                string updateSql = @"
+                    UPDATE Flashcards
+                    SET Question = @Question, Answer = @Answer
+                    WHERE DisplayID = @FlashcardID";
+
+                connection.Execute(updateSql, new
                 {
-                    var flashcard = connection.QuerySingleOrDefault<Flashcard>(
-                        "SELECT * FROM Flashcards WHERE DisplayID = @FlashcardID", new
-                        {
-                            FlashcardID = stackID
-                        });
+                    Question = question,
+                    Answer = answer,
+                    FlashcardID = flashcardID
+                });
 
-                    if (flashcard == null)
-                    {
-                        Console.WriteLine("Flashcard not found. Please try again.");
-                        continue;
-                    }
-
-                    string question = UserInput.GetQuestion("Please enter the updated question", true, flashcard.Question);
-
-                    string answer = UserInput.GetAnswer("Please enter the updated answer", true, flashcard.Answer);
-
-                    string updateSql = @"
-                            UPDATE Flashcards
-                            SET Question = @Question, Answer = @Answer
-                            WHERE DisplayID = @FlashcardID";
-
-                    connection.Execute(updateSql, new
-                    {
-                        Question = question,
-                        Answer = answer,
-                        FlashcardID = stackID
-                    });
-
-                    Console.WriteLine("Flashcard updated successfully.");
-                    break;
-                }
+                Console.WriteLine("Flashcard updated successfully.");
             }
         }
 
         public static void DeleteFlashcard(int stackId)
         {
-            Console.WriteLine("\n");
-            Console.WriteLine("Please enter the ID of the flashcard that you want to remove: ");
+            Console.Clear();
+
+            UI.DisplayFlashcards(stackId);
+
+            Console.WriteLine("Please enter the ID of the flashcard that you want to remove:\n");
             var input = Console.ReadLine().Trim();
 
             if (int.TryParse(input, out int flashcardID))

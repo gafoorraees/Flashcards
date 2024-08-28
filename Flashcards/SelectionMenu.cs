@@ -1,26 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Flashcards.Tables;
-
-namespace Flashcards
+﻿namespace Flashcards
 {
     internal class SelectionMenu
     {
         internal void Menu()
         {
-            Console.Clear();
             bool closeApp = false;
             while (closeApp == false)
             {
+                Console.Clear();
                 Console.WriteLine("Choose");
                 Console.WriteLine("Type 1 to Manage Stacks");
                 Console.WriteLine("Type 2 to Manage Flashcards");
                 Console.WriteLine("Type 3 to Start a Study Session");
                 Console.WriteLine("Type 4 to See Previous Study Sessions");
-                Console.WriteLine("Type 5 to close the application");
+                Console.WriteLine("Type 5 to Close the application");
 
                 string command = Console.ReadLine();
 

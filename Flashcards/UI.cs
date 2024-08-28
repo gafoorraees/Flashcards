@@ -1,10 +1,5 @@
 ﻿using Flashcards.Tables;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace Flashcards
 {
@@ -24,15 +19,23 @@ namespace Flashcards
 
             Console.WriteLine("Available stacks:");
 
-            foreach (var stack in stacks)
-            {
-                Console.WriteLine($"Name: {stack.Name}");
+            var table = new Table();
+            table.AddColumn("Stack");
+            table.Border = TableBorder.Ascii;
+            table.ShowRowSeparators();
 
+
+            foreach (var stack in stacks)
+            { 
+                table.AddRow(stack.Name);
+        
             }
+            AnsiConsole.Write(table);
         }
 
         public static void IndividualStacks()
         {
+            Console.Clear();
             var menu = new SelectionMenu();
 
             DisplayStacks();
@@ -53,7 +56,7 @@ namespace Flashcards
 
             while (true)
             { 
-                Console.WriteLine("Would you like to modify the cards in this stack?\n");
+                Console.WriteLine("Would you like to modify the cards in this stack? Choose a number below:\n");
                 Console.WriteLine("1. Add flashcard to stack.");
                 Console.WriteLine("2. Update flashcard in stack.");
                 Console.WriteLine("3. Delete flashcard in stack.");
@@ -101,6 +104,7 @@ namespace Flashcards
 
         public static void ManageStacks()
         {
+            Console.Clear();
             var menu = new SelectionMenu();
 
             Console.WriteLine("Manage Stacks:\n");
@@ -136,6 +140,7 @@ namespace Flashcards
         }
         public static void DisplayFlashcards()
         {
+            Console.Clear();
             Console.WriteLine("Enter the stack name for which you would like to see flashcards:\n");
             DisplayStacks();
 
@@ -160,12 +165,13 @@ namespace Flashcards
 
         public static void DisplayFlashcards(int stackId)
         {
+            Console.Clear();
             var flashcards = FlashcardsTable.GetFlashcardsFromStack(stackId);
             var stackName = Stacks.ReturnStackName(stackId);
 
             if (flashcards.Count == 0)
             {
-                Console.WriteLine("No available flascards in this stack. Please add flashcards first.");
+                Console.WriteLine("No available flascards in this stack. Please add flashcards first.\n");
                 return;
             }
 
@@ -179,6 +185,7 @@ namespace Flashcards
 
         public static void ManageFlashcards()
         {
+            Console.Clear();
             IndividualStacks();
         }
     }

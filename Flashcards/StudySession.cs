@@ -38,19 +38,29 @@ namespace Flashcards
 
             foreach (var flashcard in flashcardDTOS)
             {
-                Console.WriteLine($"Question: {flashcard.Question}");
+                Console.WriteLine($"Question: {flashcard.Question}\n");
 
-                Console.WriteLine("Your answer: ");
-                string userAnswer = Console.ReadLine().Trim();
+                string userAnswer = "";
 
+                while (string.IsNullOrWhiteSpace(userAnswer))
+                {
+                    Console.WriteLine("Your answer: ");
+                    userAnswer = Console.ReadLine().Trim();
+
+                    if (string.IsNullOrWhiteSpace(userAnswer))
+                    {
+                        Console.WriteLine("Answer cannot be blank. Please try again.\n");
+                    }
+                }
+                
                 if (string.Equals(userAnswer, flashcard.Answer, StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine("Correct!");
+                    Console.WriteLine("Correct!\n");
                     studySession.Score++;
                 }
                 else
                 {
-                    Console.WriteLine($"Incorrect. The correct answer is: {flashcard.Answer}");
+                    Console.WriteLine($"Incorrect. The correct answer is: {flashcard.Answer}\n");
                 }
             }
 

@@ -9,6 +9,8 @@ namespace Flashcards
     {
         public static void CreateStack()
         {
+            Console.Clear();
+
             var stackList = Stacks.GetAllStacks();
             string stackName;
 
@@ -36,6 +38,8 @@ namespace Flashcards
 
         public static void CreateFlashcard(int stackId)
         {
+            Console.Clear();
+
             string question = GetQuestion("Enter the question: ", false);
             string answer = GetAnswer("Enter the answer: ", false);
 
@@ -80,11 +84,6 @@ namespace Flashcards
                 prompt);
 
             string answer = Console.ReadLine();
-
-            if (!isUpdate)
-            {
-                Validation.ValidString(answer);
-            }
 
             return string.IsNullOrEmpty(answer) ? currentAnswer : answer;
         }
