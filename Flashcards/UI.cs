@@ -17,19 +17,24 @@ namespace Flashcards
                 menu.Menu();
             }
 
-            Console.WriteLine("Available stacks:");
+            AnsiConsole.Write(new Markup("[bold underline]Available Stacks[/]\n"));
 
             var table = new Table();
-            table.AddColumn("Stack");
-            table.Border = TableBorder.Ascii;
-            table.ShowRowSeparators();
 
+            table.AddColumn("Stack");
+
+            table.Border = TableBorder.Ascii;
+            table.ShowHeaders = true;
+            table.BorderColor(Color.Grey);
+            table.ShowFooters = false;
+            table.ShowRowSeparators();
 
             foreach (var stack in stacks)
             { 
                 table.AddRow(stack.Name);
         
             }
+
             AnsiConsole.Write(table);
         }
 
@@ -56,7 +61,7 @@ namespace Flashcards
 
             while (true)
             { 
-                Console.WriteLine("Would you like to modify the cards in this stack? Choose a number below:\n");
+                Console.WriteLine("\nWould you like to modify the cards in this stack? Choose a number below:\n");
                 Console.WriteLine("1. Add flashcard to stack.");
                 Console.WriteLine("2. Update flashcard in stack.");
                 Console.WriteLine("3. Delete flashcard in stack.");
@@ -151,16 +156,33 @@ namespace Flashcards
 
             if (flashcards.Count == 0)
             {
-                Console.WriteLine("No available flascards in this stack. Please add flashcards first.\n");
+                Console.WriteLine("\nNo available flascards in this stack. Please add flashcards first.\n");
                 return;
             }
 
-            Console.WriteLine($"Flashcards available in the stack '{stackName}':\n");
+            AnsiConsole.Write(new Markup($"[bold underline]Flashcards for stack: {stackName}[/]\n"));
+
+            var table = new Table();
+
+            table.AddColumn(new TableColumn("[bold]ID[/]"));
+            table.AddColumn(new TableColumn("[bold]Question[/]"));
+            table.AddColumn(new TableColumn("[bold]Answer[/]"));
+
+            table.Border(TableBorder.Ascii);
+            table.ShowHeaders = true;
+            table.BorderColor(Color.Grey);
+            table.ShowFooters = false;
 
             foreach (var flashcard in flashcards)
             {
-                Console.WriteLine($"ID: {flashcard.DisplayID}. Question: {flashcard.Question}. Answer: {flashcard.Answer}\n");
-            }  
+                table.AddRow(
+                    flashcard.DisplayID.ToString(),
+                    flashcard.Question,
+                    flashcard.Answer
+                );
+            }
+
+            AnsiConsole.Write(table);
         }
 
         public static void DisplayFlashcards(int stackId)
@@ -175,12 +197,29 @@ namespace Flashcards
                 return;
             }
 
-            Console.WriteLine($"Flashcards available in the stack '{stackName}':\n");
+            AnsiConsole.Write(new Markup($"[bold underline]Flashcards for stack: {stackName}[/]\n"));
+
+            var table = new Table();
+
+            table.AddColumn(new TableColumn("[bold]ID[/]").Centered());
+            table.AddColumn(new TableColumn("[bold]Question[/]").Centered());
+            table.AddColumn(new TableColumn("[bold]Answer[/]").Centered());
+
+            table.Border(TableBorder.Ascii);
+            table.ShowHeaders = true;
+            table.BorderColor(Color.Grey);
+            table.ShowFooters = false;
 
             foreach (var flashcard in flashcards)
             {
-                Console.WriteLine($"ID: {flashcard.DisplayID}. Question: {flashcard.Question}. Answer: {flashcard.Answer}\n");
+                table.AddRow(
+                    flashcard.DisplayID.ToString(),
+                    flashcard.Question,
+                    flashcard.Answer
+ );
             }
+
+            AnsiConsole.Write(table);
         }
 
         public static void ManageFlashcards()

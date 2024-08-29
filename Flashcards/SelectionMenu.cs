@@ -1,4 +1,6 @@
-﻿namespace Flashcards
+﻿using Spectre.Console;
+
+namespace Flashcards
 {
     internal class SelectionMenu
     {
@@ -8,14 +10,20 @@
             while (closeApp == false)
             {
                 Console.Clear();
-                Console.WriteLine("Choose");
-                Console.WriteLine("Type 1 to Manage Stacks");
-                Console.WriteLine("Type 2 to Manage Flashcards");
-                Console.WriteLine("Type 3 to Start a Study Session");
-                Console.WriteLine("Type 4 to See Previous Study Sessions");
-                Console.WriteLine("Type 5 to Close the application");
 
-                string command = Console.ReadLine();
+                var selection = new Markup("Type 1 to Manage Stacks\n" +
+                           "Type 2 to Manage Flashcards\n" +
+                           "Type 3 to Start a Study Session\n" +
+                           "Type 4 to See Previous Study Sessions\n" +
+                           "Type 5 to Close the application");
+
+                var panel = new Panel(selection)
+                .Header("[Bold underline]Flashcards Menu[/]")
+                .Border(BoxBorder.Ascii);
+
+                AnsiConsole.Render(panel);
+
+                var command = AnsiConsole.Ask<string>("Select:");
 
                 switch (command)
                 {
@@ -34,6 +42,10 @@
                     case "5":
                         closeApp = true;
                         Environment.Exit(0);
+                        break;
+                    default:
+                        AnsiConsole.MarkupLine("Invalid selection. Pleaes try agian.");
+                        Menu();
                         break;
                 }
 

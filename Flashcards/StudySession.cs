@@ -1,5 +1,6 @@
 ﻿using Flashcards.Models;
 using Flashcards.Tables;
+using Spectre.Console;
 
 namespace Flashcards
 {
@@ -82,12 +83,32 @@ namespace Flashcards
         {
             var studySessions = StudySessions.GetStudySessions();
 
-            Console.WriteLine("Study Sessions:\n");
+            AnsiConsole.Write(new Markup("[bold underline]Study Sessions[/]\n").Centered());
+
+            var table = new Table();
+
+            table.AddColumn(new TableColumn("[bold]Stack[/]").Centered());
+            table.AddColumn(new TableColumn("[bold]Date[/]")).Centered();
+            table.AddColumn(new TableColumn("[bold]Score[/]")).Centered();
+
+            table.Border(TableBorder.Ascii);
+            table.ShowHeaders = true;
+            table.BorderColor(Color.Grey);
+            table.ShowFooters = false;
 
             foreach (var session in studySessions)
             {
-                Console.WriteLine($"Stack: {session.StackName}, Date: {session.Date}, Score: {session.Score}");
+                table.AddRow(
+                    session.StackName,
+                    session.Date.ToString("yyyy-MM-dd HH:mm"),
+                    session.Score.ToString()
+                );
             }
+
+            AnsiConsole.Write(table);
+
+            Console.WriteLine("\nPress any key to return to the main menu\n");
+            Console.ReadLine();
         }
     }
 }

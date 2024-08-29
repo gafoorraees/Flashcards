@@ -1,4 +1,6 @@
 ﻿using Flashcards.Tables;
+using Spectre.Console;
+using Spectre.Console;
 
 namespace Flashcards
 {
@@ -9,6 +11,7 @@ namespace Flashcards
             DatabaseSetup.EnsureDatabaseSetup();
 
             var menu = new SelectionMenu();
+          
             menu.Menu();
         }
     }
