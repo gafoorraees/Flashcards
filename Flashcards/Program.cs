@@ -1,18 +1,15 @@
 ﻿using Flashcards.Tables;
-using Spectre.Console;
-using Spectre.Console;
 
-namespace Flashcards
+namespace Flashcards;
+
+class Program
 {
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            DatabaseSetup.EnsureDatabaseSetup();
+        DatabaseSetup.EnsureDatabaseSetup();
 
-            var menu = new SelectionMenu();
-          
-            menu.Menu();
-        }
+        var menu = new SelectionMenu();
+      
+        menu.Menu();
     }
 }
