@@ -8,9 +8,12 @@ public class StudySession
 {
     public static void StartStudySession()
     {
-        Console.WriteLine("Please enter the name of the stack that you would like to study: ");
-        StacksUI.DisplayStacks();
+        Console.Clear();
 
+        StacksUI.DisplayStacks();
+        
+        Console.WriteLine("\nPlease enter the name of the stack that you would like to study:\n");
+        
         var stackName = Console.ReadLine().Trim();
         var stackID = Stacks.ReturnStackID(stackName);
 
@@ -33,19 +36,21 @@ public class StudySession
 
         if (flashcardDTOS.Count == 0)
         {
-            Console.WriteLine("No flashcards available in this stack. Please add flashcards first.");
+            Console.WriteLine("No flashcards available in this stack. Please add flashcards first.\n");
             return;
         }
 
-        foreach (var flashcard in flashcardDTOS)
+        for (int i = 0; i < flashcardDTOS.Count; i++)
         {
-            Console.WriteLine($"Question: {flashcard.Question}\n");
+            var flashcard = flashcardDTOS[i];
+
+            Console.WriteLine($"\nQuestion: {flashcard.Question}\n");
 
             string userAnswer = "";
 
             while (string.IsNullOrWhiteSpace(userAnswer))
             {
-                Console.WriteLine("Your answer: ");
+                Console.WriteLine("Your answer:\n");
                 userAnswer = Console.ReadLine().Trim();
 
                 if (string.IsNullOrWhiteSpace(userAnswer))
@@ -53,19 +58,27 @@ public class StudySession
                     Console.WriteLine("Answer cannot be blank. Please try again.\n");
                 }
             }
-            
+
             if (string.Equals(userAnswer, flashcard.Answer, StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("Correct!\n");
+                Console.WriteLine("\nCorrect!\n");
                 studySession.Score++;
             }
             else
             {
-                Console.WriteLine($"Incorrect. The correct answer is: {flashcard.Answer}\n");
+                Console.WriteLine($"\nIncorrect. The correct answer is: {flashcard.Answer}\n");
+            }
+
+            if (i < flashcardDTOS.Count - 1)
+            { 
+                Console.WriteLine("Press Enter to continue to the next question.\n");
+                Console.ReadLine();
             }
         }
 
         Console.WriteLine($"You have completed all cards for this stack! Your score: {studySession.Score}/{flashcardDTOS.Count}");
+        Console.WriteLine("Enter any key to return to the main menu.\n");
+        Console.ReadLine();
 
         StudySessions.SaveStudySession(studySession);
     }
@@ -81,9 +94,19 @@ public class StudySession
 
     public static void DisplayStudySessions()
     {
+        Console.Clear();
+
         var studySessions = StudySessions.GetStudySessions();
 
         AnsiConsole.Write(new Markup("[bold underline]Study Sessions[/]\n").Centered());
+
+        if (!studySessions.Any())
+        {
+            Console.WriteLine("No study sessions found, please study more!");
+            Console.WriteLine("Press any key to return to the main menu\n");
+            Console.ReadLine();
+            Utility.ReturnToMenu();
+        }
 
         var table = new Table();
 

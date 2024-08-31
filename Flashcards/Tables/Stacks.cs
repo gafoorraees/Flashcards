@@ -56,9 +56,11 @@ public class Stacks
     {
         while (true)
         {
+            Console.Clear();
+
             StacksUI.DisplayStacks();
 
-            Console.WriteLine("\nPlease enter the name of the stack that you would like to delete, or enter 'M' to return to the main menu. Warning: All flashcards linked to the stack will be deleted.\n");
+            Console.WriteLine("\nPlease enter the name of the stack that you would like to delete, or enter 'M' to return to the main menu. Warning: All flashcards and study sessions linked to the stack will be deleted.\n");
             string stackName = Console.ReadLine().Trim();
 
             if (stackName == "M" || stackName == "m") 

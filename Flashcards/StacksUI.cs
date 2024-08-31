@@ -7,14 +7,15 @@ internal class StacksUI
 {
     public static void DisplayStacks()
     {
-        var menu = new SelectionMenu();
+        Console.Clear();
+
         var stacks = Stacks.GetAllStacks();
 
         if (stacks.Count == 0)
         {
             Console.WriteLine("No available stacks. Please create a stack first. Press Enter to return the main menu.\n");
             Console.ReadLine();
-            menu.Menu();
+            Utility.ReturnToMenu();
         }
 
         AnsiConsole.Write(new Markup("[bold underline]Available Stacks[/]\n"));
@@ -44,13 +45,13 @@ internal class StacksUI
         
         DisplayStacks();
 
-        Console.WriteLine("Please type in the name of the stack that you would like to view, or enter 0 to return to the main menu.\n");
+        Console.WriteLine("\nPlease type in the name of the stack that you would like to view, or enter 'M' to return to the main menu.\n");
 
         var stackName = Console.ReadLine().Trim();
 
         stackName = Utility.ValidString(stackName);
 
-        if (stackName == "0")
+        if (stackName == "M" || stackName == "m")
         {
             Utility.ReturnToMenu();
         }
@@ -59,9 +60,9 @@ internal class StacksUI
 
         if (stackId == 0)
         {
-            Console.WriteLine("Stack not found. Please try again.\n");
+            Console.WriteLine("\nStack not found. Press any key to try again.\n");
+            Console.ReadLine();
             IndividualStacks();
-            return;
         }
 
         FlashcardUI.DisplayFlashcards(stackId);
@@ -74,7 +75,7 @@ internal class StacksUI
                 "Type 4 to Change to another stack.\n" +
                 "Type 5 to Return to Main Menu.");
 
-            Console.WriteLine("\nWould you like to modify the cards in this stack? Choose a number below:\n");
+            Console.WriteLine("\nWould you like to add to or modify the cards of this stack? Choose a number below:\n");
 
             var panel = new Panel(selection)
                 .Header("[Bold underline]Management of cards[/]")
@@ -137,7 +138,7 @@ internal class StacksUI
 
         AnsiConsole.Render(panel);
 
-        Console.WriteLine("Select:\n");
+        Console.WriteLine("\nSelect:\n");
 
         string input = Console.ReadLine();
 

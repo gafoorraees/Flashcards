@@ -34,8 +34,6 @@ internal class StacksInput
         Stacks.InsertStack(stackName);
     }
 
-
-    
     internal static string GetStackName(string prompt)
     {
         Console.WriteLine(prompt);

@@ -52,17 +52,14 @@ public class FlashcardsTable
 
         if (flashcards.Count == 0)
         {
-            Console.WriteLine("No flashcards available in this stack. Press Enter to return to Flashcard Management");
+            Console.WriteLine("No flashcards available in this stack. Enter any key to return to Flashcard Management\n");
             Console.ReadLine();
             FlashcardUI.ManageFlashcards();
         }
 
         Console.WriteLine("Available Flashcards:\n");
-        
-        foreach (var card in flashcards)
-        {
-            Console.WriteLine($"ID: {card.DisplayID}. Question: {card.Question}. Answer: {card.Answer}\n");
-        }
+
+        FlashcardUI.DisplayFlashcards(stackID);
 
         int flashcardID;
         while (true)
@@ -85,8 +82,10 @@ public class FlashcardsTable
   
         var selectedFlashcard = flashcards.SingleOrDefault(f => f.DisplayID == flashcardID);
 
+        Console.Clear();
+
         string question = FlashcardInput.GetQuestion("Please enter the updated question", true, selectedFlashcard.Question);
-        string answer = FlashcardInput.GetAnswer("Please enter the updated answer", true, selectedFlashcard.Answer);
+        string answer = FlashcardInput.GetAnswer("\nPlease enter the updated answer", true, selectedFlashcard.Answer);
 
         using var connection = new SqlConnection(connectionString);
         
@@ -101,6 +100,8 @@ public class FlashcardsTable
             Answer = answer,
             FlashcardID = flashcardID
         });
+
+        Console.Clear();
 
         Console.WriteLine("Flashcard updated successfully.");
     }
@@ -119,7 +120,7 @@ public class FlashcardsTable
 
         FlashcardUI.DisplayFlashcards(stackId);
 
-        Console.WriteLine("Please enter the ID of the flashcard that you want to remove:\n");
+        Console.WriteLine("\nPlease enter the ID of the flashcard that you want to remove:\n");
         var input = Console.ReadLine().Trim();
 
         if (int.TryParse(input, out int flashcardID))
@@ -143,7 +144,9 @@ public class FlashcardsTable
                 JOIN OrderedFlashcards ON Flashcards.ID = OrderedFlashcards.ID";
 
             connection.Execute(reorderQuery, new { StackID = stackId });
-            
+
+            Console.Clear();
+
             Console.WriteLine("Flashcard deleted successfully.");
         }
         else

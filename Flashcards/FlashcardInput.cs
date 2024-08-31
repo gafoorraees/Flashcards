@@ -24,14 +24,13 @@ internal class FlashcardInput
         Console.Clear();
 
         FlashcardUI.DisplayFlashcards(stackId);
-
     }
 
     public static string GetQuestion(string prompt, bool isUpdate, string currentQuestion = "")
     {
         Console.WriteLine(isUpdate ?
-            $"{prompt} (current: {currentQuestion}, press Enter to keep current):" :
-            prompt);
+            $"{prompt} (current: {currentQuestion}, press Enter to keep current):\n" :
+            $"\n{prompt}");
 
         string question = Console.ReadLine().Trim();
 
@@ -57,8 +56,8 @@ internal class FlashcardInput
     public static string GetAnswer(string prompt, bool isUpdate, string currentAnswer = "")
     {
         Console.WriteLine(isUpdate ?
-            $"{prompt} (current: {currentAnswer}, press Enter to keep current):" :
-            prompt);
+            $"{prompt} (current: {currentAnswer}, press Enter to keep current):\n" :
+            $"\n{prompt}");
 
         string answer = Console.ReadLine().Trim();
 
@@ -72,7 +71,7 @@ internal class FlashcardInput
         {
             if (string.IsNullOrEmpty(answer) && isUpdate)
             {
-                Console.WriteLine("Current question kept");
+                Console.WriteLine("Current answer kept");
                 return currentAnswer;
             }
         }
