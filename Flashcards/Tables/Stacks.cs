@@ -72,7 +72,8 @@ public class Stacks
 
             if (stackId == 0)
             {
-                Console.WriteLine("\nStack does not exist. Please try again.\n");
+                Console.WriteLine("\nStack does not exist. Enter a key to try again.\n");
+                Console.ReadLine();
                 continue;
             }
 
