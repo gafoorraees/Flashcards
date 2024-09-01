@@ -24,7 +24,7 @@ This application is a command-line tool designed for creating, managing, and stu
 
 1. Clone the repository:
 
-	```bash
+```bash
 git clone https://github.com/gafoorraees/Flashcards.git 
 cd Flashcards
 ```
